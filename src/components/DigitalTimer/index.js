@@ -23,7 +23,7 @@ class DigitalTimer extends Component {
     const {startTime} = this.state
 
     const splitWithColanTime = startTime.split(':')
-    if (splitWithColanTime[0] > 1) {
+    if (splitWithColanTime[0] > 0) {
       const minutesInInt = parseInt(splitWithColanTime[0])
       const decreaseMinutes = minutesInInt - 1
       const combineMinAndPrevSec = `${decreaseMinutes}:${splitWithColanTime[1]}`
@@ -94,7 +94,7 @@ class DigitalTimer extends Component {
               >
                 -
               </button>
-              <p className="less-increase-time-25">25</p>
+              <p className="less-increase-time-25">{startTime.split(':')[0]}</p>
               <button
                 onClick={this.pressPlusButton}
                 type="button"
