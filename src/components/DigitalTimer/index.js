@@ -6,11 +6,12 @@ class DigitalTimer extends Component {
 
   toggleRunningState = () => {
     this.setState(prevState => ({timerRunning: !prevState.timerRunning}))
+    this.timerId = setInterval(() => this.intervalCallBackFun, 1000)
   }
 
   pressPlusButton = () => {
-    const {stateMinutes} = this.state
-    if (stateMinutes < 59) {
+    const {stateMinutes, timerRunning} = this.state
+    if (stateMinutes < 59 && timerRunning === false) {
       const increasingMinute = stateMinutes + 1
       this.setState({
         stateMinutes: increasingMinute,
@@ -19,8 +20,8 @@ class DigitalTimer extends Component {
   }
 
   pressMinusButton = () => {
-    const {stateMinutes} = this.state
-    if (stateMinutes > 0) {
+    const {stateMinutes, timerRunning} = this.state
+    if (stateMinutes > 0 && timerRunning === false) {
       const decreasingMinute = stateMinutes - 1
       this.setState({
         stateMinutes: decreasingMinute,
