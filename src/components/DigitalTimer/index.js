@@ -2,37 +2,34 @@ import {Component} from 'react'
 import './index.css'
 
 class DigitalTimer extends Component {
-  state = {startTime: '25:00', timerRunning: false}
+  state = {stateMinutes: 25, stateSeconds: 0, timerRunning: false}
 
   toggleRunningState = () => {
     this.setState(prevState => ({timerRunning: !prevState.timerRunning}))
   }
 
   pressPlusButton = () => {
-    const {startTime} = this.state
-    const splitWithColanTime = startTime.split(':')
-    if (splitWithColanTime[0] < 59) {
-      const minutesInInt = parseInt(splitWithColanTime[0])
-      const increasingMinute = minutesInInt + 1
-      const combineMinAndPrevSec = `${increasingMinute}:${splitWithColanTime[1]}`
-      this.setState({startTime: combineMinAndPrevSec})
+    const {stateMinutes} = this.state
+    if (stateMinutes < 59) {
+      const increasingMinute = stateMinutes + 1
+      this.setState({
+        stateMinutes: increasingMinute,
+      })
     }
   }
 
   pressMinusButton = () => {
-    const {startTime} = this.state
-
-    const splitWithColanTime = startTime.split(':')
-    if (splitWithColanTime[0] > 0) {
-      const minutesInInt = parseInt(splitWithColanTime[0])
-      const decreaseMinutes = minutesInInt - 1
-      const combineMinAndPrevSec = `${decreaseMinutes}:${splitWithColanTime[1]}`
-      this.setState({startTime: combineMinAndPrevSec})
+    const {stateMinutes} = this.state
+    if (stateMinutes > 0) {
+      const decreasingMinute = stateMinutes - 1
+      this.setState({
+        stateMinutes: decreasingMinute,
+      })
     }
   }
 
   render() {
-    const {startTime, timerRunning} = this.state
+    const {stateMinutes, stateSeconds, timerRunning} = this.state
 
     const pauseStartIconText = timerRunning
       ? {
@@ -48,6 +45,11 @@ class DigitalTimer extends Component {
           displayText: 'Paused',
         }
 
+    const formattedMinutes =
+      stateMinutes < 10 ? `0${stateMinutes}` : stateMinutes
+    const formattedSeconds =
+      stateSeconds < 10 ? `0${stateSeconds}` : stateSeconds
+
     return (
       <div className="main-bg-container">
         <h1 className="main-container-heading">digital Timer</h1>
@@ -55,7 +57,7 @@ class DigitalTimer extends Component {
           <div className="watch-container">
             <div className="timer-container">
               <div className="timer-bg-content">
-                <h1 className="main-25-timer-heading">{startTime}</h1>
+                <h1 className="main-25-timer-heading">{`${formattedMinutes}:${formattedSeconds}`}</h1>
                 <p className="main-25-timer-paragraph">
                   {pauseStartIconText.displayText}
                 </p>
@@ -94,7 +96,7 @@ class DigitalTimer extends Component {
               >
                 -
               </button>
-              <p className="less-increase-time-25">{startTime.split(':')[0]}</p>
+              <p className="less-increase-time-25">{formattedMinutes}</p>
               <button
                 onClick={this.pressPlusButton}
                 type="button"
