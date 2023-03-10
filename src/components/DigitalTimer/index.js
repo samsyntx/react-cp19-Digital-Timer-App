@@ -29,6 +29,10 @@ class DigitalTimer extends Component {
     }
   }
 
+  resetButtonClicked = () => {
+    this.setState({stateMinutes: 25, stateSeconds: 0, timerRunning: false})
+  }
+
   render() {
     const {stateMinutes, stateSeconds, timerRunning} = this.state
 
@@ -79,7 +83,11 @@ class DigitalTimer extends Component {
                 />
                 <p>{timerRunning ? 'Pause' : 'Start'}</p>
               </button>
-              <button type="button" className="start-pause-reset-button">
+              <button
+                onClick={this.resetButtonClicked}
+                type="button"
+                className="start-pause-reset-button"
+              >
                 <img
                   className="start-pause-button-icon"
                   src="https://assets.ccbp.in/frontend/react-js/reset-icon-img.png"
