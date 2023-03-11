@@ -4,9 +4,34 @@ import './index.css'
 class DigitalTimer extends Component {
   state = {stateMinutes: 25, stateSeconds: 0, timerRunning: false}
 
-  toggleRunningState = () => {
-    this.setState(prevState => ({timerRunning: !prevState.timerRunning}))
-    this.timerId = setInterval(() => this.intervalCallBackFun, 1000)
+  intervalCallBackFun = () => {
+    const {stateMinutes, stateSeconds} = this.state
+    if (stateMinutes === 0 && stateSeconds === 0) {
+      clearInterval(this.timerId)
+      this.setState({stateMinutes: 0, stateSeconds: 0, timerRunning: false})
+    } else if (stateSeconds === 0) {
+      this.setState(prevState => ({
+        stateMinutes: prevState.stateMinutes - 1,
+        stateSeconds: 59,
+      }))
+    } else {
+      this.setState(prevState => ({stateSeconds: prevState.stateSeconds - 1}))
+    }
+    console.log('Callback Function Called')
+  }
+
+  funToRunIntervalPlayButton = () => {
+    const {stateMinutes, stateSeconds} = this.state
+    console.log(stateMinutes, stateSeconds)
+    if (stateMinutes > 0 || stateSeconds > 0) {
+      this.setState({timerRunning: true})
+      this.timerId = setInterval(this.intervalCallBackFun, 1000)
+    }
+  }
+
+  funToClearIntervalPausedButton = () => {
+    clearInterval(this.timerId)
+    this.setState({timerRunning: false})
   }
 
   pressPlusButton = () => {
@@ -30,25 +55,41 @@ class DigitalTimer extends Component {
   }
 
   resetButtonClicked = () => {
+    clearInterval(this.timerId)
     this.setState({stateMinutes: 25, stateSeconds: 0, timerRunning: false})
+    console.log('Reset Button Pressed')
   }
 
   render() {
     const {stateMinutes, stateSeconds, timerRunning} = this.state
 
-    const pauseStartIconText = timerRunning
-      ? {
-          imageUrl:
-            'https://assets.ccbp.in/frontend/react-js/pause-icon-img.png',
-          altText: 'pause icon',
-          displayText: 'Running',
-        }
-      : {
-          imageUrl:
-            'https://assets.ccbp.in/frontend/react-js/play-icon-img.png',
-          altText: 'play icon',
-          displayText: 'Paused',
-        }
+    const toggleButtonStartAndPaused = timerRunning ? (
+      <button
+        onClick={this.funToClearIntervalPausedButton}
+        type="button"
+        className="start-pause-reset-button"
+      >
+        <img
+          className="start-pause-button-icon"
+          src="https://assets.ccbp.in/frontend/react-js/pause-icon-img.png"
+          alt="pause icon"
+        />
+        <p>Paused</p>
+      </button>
+    ) : (
+      <button
+        onClick={this.funToRunIntervalPlayButton}
+        type="button"
+        className="start-pause-reset-button"
+      >
+        <img
+          className="start-pause-button-icon"
+          src="https://assets.ccbp.in/frontend/react-js/play-icon-img.png"
+          alt="play icon"
+        />
+        <p>Play</p>
+      </button>
+    )
 
     const formattedMinutes =
       stateMinutes < 10 ? `0${stateMinutes}` : stateMinutes
@@ -64,25 +105,14 @@ class DigitalTimer extends Component {
               <div className="timer-bg-content">
                 <h1 className="main-25-timer-heading">{`${formattedMinutes}:${formattedSeconds}`}</h1>
                 <p className="main-25-timer-paragraph">
-                  {pauseStartIconText.displayText}
+                  {timerRunning ? 'Running' : 'Paused'}
                 </p>
               </div>
             </div>
           </div>
           <div className="start-pause-container">
             <div className="start-pause-reset-buttons-container">
-              <button
-                onClick={this.toggleRunningState}
-                type="button"
-                className="start-pause-reset-button"
-              >
-                <img
-                  className="start-pause-button-icon"
-                  src={pauseStartIconText.imageUrl}
-                  alt={pauseStartIconText.altText}
-                />
-                <p>{timerRunning ? 'Pause' : 'Start'}</p>
-              </button>
+              {toggleButtonStartAndPaused}
               <button
                 onClick={this.resetButtonClicked}
                 type="button"
