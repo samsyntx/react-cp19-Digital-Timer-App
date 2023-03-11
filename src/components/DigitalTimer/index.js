@@ -35,8 +35,8 @@ class DigitalTimer extends Component {
   }
 
   pressPlusButton = () => {
-    const {stateMinutes, timerRunning} = this.state
-    if (stateMinutes < 59 && timerRunning === false) {
+    const {stateMinutes} = this.state
+    if (stateMinutes < 59) {
       const increasingMinute = stateMinutes + 1
       this.setState({
         stateMinutes: increasingMinute,
@@ -45,8 +45,8 @@ class DigitalTimer extends Component {
   }
 
   pressMinusButton = () => {
-    const {stateMinutes, timerRunning} = this.state
-    if (stateMinutes > 0 && timerRunning === false) {
+    const {stateMinutes} = this.state
+    if (stateMinutes > 0) {
       const decreasingMinute = stateMinutes - 1
       this.setState({
         stateMinutes: decreasingMinute,
@@ -74,7 +74,7 @@ class DigitalTimer extends Component {
           src="https://assets.ccbp.in/frontend/react-js/pause-icon-img.png"
           alt="pause icon"
         />
-        <p>Paused</p>
+        Pause
       </button>
     ) : (
       <button
@@ -87,7 +87,7 @@ class DigitalTimer extends Component {
           src="https://assets.ccbp.in/frontend/react-js/play-icon-img.png"
           alt="play icon"
         />
-        <p>Play</p>
+        Start
       </button>
     )
 
@@ -132,14 +132,18 @@ class DigitalTimer extends Component {
                 onClick={this.pressMinusButton}
                 type="button"
                 className="time-increase-less-button"
+                disabled={timerRunning}
               >
                 -
               </button>
-              <p className="less-increase-time-25">{formattedMinutes}</p>
+              <div>
+                <p className="less-increase-time-25">{formattedMinutes}</p>
+              </div>
               <button
                 onClick={this.pressPlusButton}
                 type="button"
                 className="time-increase-less-button"
+                disabled={timerRunning}
               >
                 +
               </button>
