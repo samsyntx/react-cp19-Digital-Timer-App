@@ -2,31 +2,49 @@ import {Component} from 'react'
 import './index.css'
 
 class DigitalTimer extends Component {
-  state = {stateMinutes: 25, stateSeconds: 0, timerRunning: false}
+  state = {
+    stateMinutes: 25,
+    stateSeconds: 0,
+    timerRunning: false,
+  }
 
-  intervalCallBackFun = () => {
+  componentWillUnmount = () => {
+    clearInterval(this.timerId)
+  }
+
+  intervalCallBackFunToUpdateSec = () => {
     const {stateMinutes, stateSeconds} = this.state
-    if (stateMinutes === 0 && stateSeconds === 0) {
-      clearInterval(this.timerId)
-      this.setState({stateMinutes: 0, stateSeconds: 0, timerRunning: false})
-    } else if (stateSeconds === 0) {
+    if (stateMinutes > 0 && stateSeconds > 0) {
+      this.setState(prevState => ({
+        stateSeconds: prevState.stateSeconds - 1,
+      }))
+    } else if (stateMinutes > 0 && stateSeconds === 0) {
+      this.setState(prevState => ({
+        stateMinutes: prevState.stateMinutes - 1,
+        stateSeconds: 59,
+      }))
+    } else if (stateMinutes === 0 && stateSeconds > 0) {
+      this.setState(prevState => ({
+        stateSeconds: prevState.stateSeconds - 1,
+      }))
+    } else if (stateMinutes === 0 && stateSeconds !== 0) {
       this.setState(prevState => ({
         stateMinutes: prevState.stateMinutes - 1,
         stateSeconds: 59,
       }))
     } else {
-      this.setState(prevState => ({stateSeconds: prevState.stateSeconds - 1}))
+      clearInterval(this.timerId)
+      this.setState({
+        timerRunning: false,
+      })
     }
-    console.log('Callback Function Called')
+    console.log('Callback Function')
   }
 
   funToRunIntervalPlayButton = () => {
-    const {stateMinutes, stateSeconds} = this.state
-    console.log(stateMinutes, stateSeconds)
-    if (stateMinutes > 0 || stateSeconds > 0) {
-      this.setState({timerRunning: true})
-      this.timerId = setInterval(this.intervalCallBackFun, 1000)
-    }
+    this.setState({timerRunning: true})
+    this.timerId = setInterval(this.intervalCallBackFunToUpdateSec, 1000)
+    console.log('Play Button')
   }
 
   funToClearIntervalPausedButton = () => {
@@ -137,7 +155,7 @@ class DigitalTimer extends Component {
                 -
               </button>
               <div>
-                <p className="less-increase-time-25">{formattedMinutes}</p>
+                <p className="less-increase-time-25">Hnji</p>
               </div>
               <button
                 onClick={this.pressPlusButton}
